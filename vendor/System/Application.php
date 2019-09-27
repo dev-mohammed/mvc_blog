@@ -26,7 +26,7 @@ class Application
      */
     public function run()
     {
-
+        $this->session->start();
     }
 
     /**
