@@ -21,6 +21,15 @@ class Application
     }
 
     /**
+     * Run The Application
+     * @return void
+     */
+    public function run()
+    {
+
+    }
+
+    /**
      * Register classes in spl auto load register
      * @return void
      */
@@ -54,7 +63,24 @@ class Application
      */
     public function get($key)
     {
-        return isset($this->container[$key]) ? $this->container[$key] : null;
+        if (!$this->isSharing($key)) {
+            if ($this->isCoreAlias($key)) {
+                $this->share($key, $this->createNewCoreObject($key));
+            } else {
+                die('<b>' . $key . ' <b> not found in application container');
+            }
+        }
+        return $this->container[$key];
+    }
+
+    /**
+     * Determine if the given key is shared through Application
+     * @param string $key
+     * @return bool
+     */
+    public function isSharing($key)
+    {
+        return isset($this->container[$key]);
     }
 
     /**
@@ -67,6 +93,24 @@ class Application
     public function share($key, $value)
     {
         $this->container[$key] = $value;
+    }
+
+    /**
+     * Get All Core Classes With its aliases
+     * @return array
+     */
+    private function coreClasses()
+    {
+        return [
+            'request'  => 'System\\Http\\Request',
+            'response' => 'System\\Http\\Response',
+            'session'  => 'System\\Session',
+            'cookie'   => 'System\\Cookie',
+            'load'     => 'System\\Loader',
+            'html'     => 'System\\Html',
+            'db'       => 'System\\Database',
+            'view'     => 'System\\View\\ViewFactory'
+        ];
     }
 
     /**
@@ -87,4 +131,28 @@ class Application
     {
         $this->file->require($this->file->toVendor('helpers.php'));
     }
+
+    /**
+     * Determine if the given key is an alias to core class
+     * @param string $alias
+     * @return bool
+     */
+    private function isCoreAlias($alias)
+    {
+        $coreClasses = $this->coreClasses();
+        return isset($coreClasses[$alias]);
+    }
+
+    /**
+     * Create new object for the core class based on the given alias
+     * @param string $alias
+     * @return object
+     */
+    private function createNewCoreObject($alias)
+    {
+        $coreClasses = $this->coreClasses();
+        $object      = $coreClasses[$alias];
+        return new $object($this);
+    }
+
 }

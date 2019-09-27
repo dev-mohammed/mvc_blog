@@ -8,4 +8,4 @@ use System\Application;
 $file = new File(__DIR__);
 $app  = new Application($file);
 
-new System\Test;
+$app->run();
