@@ -10,14 +10,34 @@ class Application
     private $container = [];
 
     /**
+     * Application Object
+     * @var \System\Application
+     */
+    private static $instance;
+
+
+    /**
      * Application constructor.
      * @param \System\File $file
      */
-    public function __construct(File $file)
+    private function __construct(File $file)
     {
         $this->share('file', $file);
         $this->registerClasses();
         $this->loadHelpers();
+    }
+
+    /**
+     * Get Application Instance
+     * @param \System\File $file
+     * @return \System\Application
+     */
+    public static function getInstance($file = null)
+    {
+        if (is_null(static::$instance)) {
+            static::$instance = new static($file);
+        }
+        return static::$instance;
     }
 
     /**
@@ -28,6 +48,8 @@ class Application
     {
         $this->session->start();
         $this->request->prepareUrl();
+        $this->file->require('App/index.php');
+        list($controller, $method, $arguments) = $this->route->getProperRoute();
     }
 
     /**
@@ -47,10 +69,10 @@ class Application
     public function load($class)
     {
         if (strpos($class, 'App') === 0) {
-            $file = $this->file->to($class . '.php');
+            $file = $class . '.php';
         } else {
             // get the class from vendor
-            $file = $this->file->toVendor($class . '.php');
+            $file = 'vendor/' . $class . '.php';
         }
         if ($this->file->exists($file)) {
             $this->file->require($file);
@@ -106,6 +128,7 @@ class Application
             'request'  => 'System\\Http\\Request',
             'response' => 'System\\Http\\Response',
             'session'  => 'System\\Session',
+            'route'    => 'System\\Route',
             'cookie'   => 'System\\Cookie',
             'load'     => 'System\\Loader',
             'html'     => 'System\\Html',
@@ -130,7 +153,7 @@ class Application
      */
     private function loadHelpers()
     {
-        $this->file->require($this->file->toVendor('helpers.php'));
+        $this->file->require('vendor/helpers.php');
     }
 
     /**
@@ -152,7 +175,7 @@ class Application
     private function createNewCoreObject($alias)
     {
         $coreClasses = $this->coreClasses();
-        $object      = $coreClasses[$alias];
+        $object = $coreClasses[$alias];
         return new $object($this);
     }
 
