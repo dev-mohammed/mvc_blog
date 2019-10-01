@@ -101,7 +101,7 @@ class Loader
     {
         $controller .= 'Controller';
         $controller = 'App\\Controllers\\' . $controller;
-        return $controller;
+        return str_replace('/' , '\\', $controller);
     }
 
 }

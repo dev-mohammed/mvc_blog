@@ -9,6 +9,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        echo 'welcome home';
+        $this->load->controller('Header')->index();
     }
 }
