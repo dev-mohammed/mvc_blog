@@ -50,7 +50,9 @@ class Application
         $this->request->prepareUrl();
         $this->file->call('App/index.php');
         list($controller, $method, $arguments) = $this->route->getProperRoute();
-        $this->load->action($controller , $method , $arguments);
+        $output = $this->load->action($controller, $method, $arguments);
+        $this->response->setOutput($output);
+        $this->response->send();
     }
 
     /**
