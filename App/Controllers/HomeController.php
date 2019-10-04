@@ -9,6 +9,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $this->db;
+      /*  echo $this->db->data([
+            'email' => 'dola@buseet.com',
+            'status'   => 'disabled'
+        ])->insert('users')->lastId();*/
+
+      $this->db->data('email' , 'emad@buseet.com')
+          ->where('id = ?' , 1)
+          ->update('users');
+
+
     }
 }
