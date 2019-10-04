@@ -178,7 +178,7 @@ class Application
     private function createNewCoreObject($alias)
     {
         $coreClasses = $this->coreClasses();
-        $object = $coreClasses[$alias];
+        $object      = $coreClasses[$alias];
         return new $object($this);
     }
 

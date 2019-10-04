@@ -37,11 +37,11 @@ class File
     /**
      * Require The given file
      * @param string $file
-     * @return void
+     * @return mixed
      */
     public function call($file)
     {
-        require $this->to($file);
+        return require $this->to($file);
     }
 
     /**

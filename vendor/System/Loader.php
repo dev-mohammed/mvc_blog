@@ -36,10 +36,10 @@ class Loader
      * and pass the given arguments to the controller method
      * @param string $controller
      * @param string $method
-     * @param array $arguments
+     * @param $arguments
      * @return mixed
      */
-    public function action($controller, $method, array $arguments)
+    public function action($controller, $method,  $arguments)
     {
         $object = $this->controller($controller);
         return call_user_func([$object, $method], $arguments);
