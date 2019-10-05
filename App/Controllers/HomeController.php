@@ -9,7 +9,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $users = $this->load->model('Users');
-        pre($users->get(1));
+        echo $this->url->link('/home');
+        //$this->url->redirectTo('/home');
+        echo '<br>';
+        echo assets('images/logo.png');
     }
 }
